@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITP Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        #chatBox { width: 80%; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 10px; min-height: 300px; overflow-y: auto; }
+        .user-msg { text-align: right; color: blue; margin: 5px; }
+        .bot-msg { text-align: left; color: green; margin: 5px; }
+        #userInput { width: 70%; padding: 8px; }
+        #sendBtn { padding: 8px; }
+    </style>
+</head>
+<body>
+
+    <h2>AI Chatbot</h2>
+    <div id="chatBox"></div>
+    <input type="text" id="userInput" placeholder="Type your question...">
+    <button id="sendBtn">Send</button>
+
+    <script>
+        const apiKey = "7hSWgav1KMeEpLEJCD1SzZeFfxOWkVlz";  // Replace with a secure way to store API keys
+        const url = "https://prompt-flow-new-1.eastus2.inference.ml.azure.com/score";
+
+        async function callAzureAI(userInput) {
+            try {
+                const requestHeaders = new Headers({
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + apiKey//,
+                    //"azureml-model-deployment": "prompt-flow-new-1-1"
+
+                });
+
+                const requestBody = JSON.stringify({ user_input: userInput });
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: requestBody,
+                    headers: requestHeaders,
+                   // mode: "cors",  // Explicitly set CORS mode
+                    //credentials: "include"  // If API requires authentication
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Request failed with status ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.result || "No response received.";
+            } catch (error) {
+                console.error("Error:", error);
+                return "Error fetching AI response.";
+            }
+        }
+
+        document.getElementById("sendBtn").addEventListener("click", async () => {
+            const inputField = document.getElementById("userInput");
+            const chatBox = document.getElementById("chatBox");
+            const userInput = inputField.value.trim();
+
+            if (!userInput) return;
+
+            // Add user message
+            chatBox.innerHTML += `<p class="user-msg"><strong>You:</strong> ${userInput}</p>`;
+            inputField.value = "";
+
+            // Show "Typing..." message
+            const botMsg = document.createElement("p");
+            botMsg.className = "bot-msg";
+            botMsg.innerHTML = "<strong>Bot:</strong> Typing...";
+            chatBox.appendChild(botMsg);
+
+            // Get AI response
+            const response = await callAzureAI(userInput);
+
+            // Update response
+            botMsg.innerHTML = `<strong>Bot:</strong> ${response}`;
+        });
+    </script>
+
+</body>
+</html>
