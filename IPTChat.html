@@ -30,6 +30,7 @@
                     "Content-Type": "application/json",
                     "Authorization": "Bearer " + apiKey,
                     "azureml-model-deployment": "prompt-flow-new-1-1"
+
                 });
 
                 const requestBody = JSON.stringify({ user_input: userInput });
@@ -37,7 +38,9 @@
                 const response = await fetch(url, {
                     method: "POST",
                     body: requestBody,
-                    headers: requestHeaders
+                    headers: requestHeaders,
+                    mode: "cors",  // Explicitly set CORS mode
+                    credentials: "include"  // If API requires authentication
                 });
 
                 if (!response.ok) {
