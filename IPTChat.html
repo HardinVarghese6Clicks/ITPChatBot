@@ -36,11 +36,9 @@
                 const requestBody = JSON.stringify({ user_input: userInput });
 
                 const response = await fetch(url, {
-                    method: "POST",
-                    body: requestBody,
-                    headers: requestHeaders,
-                    mode: "cors",  // Explicitly set CORS mode
-                    credentials: "include"  // If API requires authentication
+                   method: "POST",
+                  body: requestBody,
+                  headers: requestHeaders
                 });
 
                 if (!response.ok) {
