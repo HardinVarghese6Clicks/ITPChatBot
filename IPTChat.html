@@ -18,7 +18,7 @@
     <h2>AI Chatbot</h2>
     <div id="chatBox"></div>
     <input type="text" id="userInput" placeholder="Type your question...">
-    <button id="sendBtn">Ask AI</button>
+    <button id="sendBtn">Send</button>
 
     <script>
         const apiKey = "7hSWgav1KMeEpLEJCD1SzZeFfxOWkVlz";  // Replace with a secure way to store API keys
@@ -28,17 +28,19 @@
             try {
                 const requestHeaders = new Headers({
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + apiKey,
-                    "azureml-model-deployment": "prompt-flow-new-1-1"
+                    "Authorization": "Bearer " + apiKey//,
+                    //"azureml-model-deployment": "prompt-flow-new-1-1"
 
                 });
 
                 const requestBody = JSON.stringify({ user_input: userInput });
 
                 const response = await fetch(url, {
-                   method: "POST",
-                  body: requestBody,
-                  headers: requestHeaders
+                    method: "POST",
+                    body: requestBody,
+                    headers: requestHeaders,
+                    //mode: "cors",  // Explicitly set CORS mode
+                    //credentials: "include"  // If API requires authentication
                 });
 
                 if (!response.ok) {
